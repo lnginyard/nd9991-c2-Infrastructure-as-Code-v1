@@ -1,38 +1,38 @@
-2019-09-09
+AWSTemplateFormatVersion: 2010-09-09
 
-Description: >
-Author | Lorenzo N. Ginyard |  Deploying a high availability web app - This template deploys a VPC, with a pair of private and public subnets across two Availability Zones. |
-| It deploys an Internet gateway with route on the public subnets. It deploys a pair of NAT gateways, with default routes for them in the private subnets.
+Description:
+  Lorenzo  Ginyard | Author | Deploying a high availability web app -This template deploys a VPC, with a pair of private and public subnets across two Availability Zones.
+  It deploys an Internet gateway with route on the public subnets. It deploys a pair of NAT gateways, with default routes for them in the private subnets.
 
 Parameters:
-  EnvironmentName:
-    Description: An Environment name that will be prefixed to resources
-    Type: String
+  EnvironmentName: Udagram
+  Description: An Environment name that will be prefixed to resources public
+  Type: String
 
     VpcCIDR:
-    Description: Please enter the IP range (CIDR notation) for this
-    Type: String
-    Default: 10.0.0.0/16
+      Description: Please enter the IP range (CIDR notation) for this
+      Type: String
+      Default: 10.0.0.0/16
 
-  PublicSubnet1CIDR:
-    Description: Please enter the IP range (CIDR notation) for the Public Subnet 1
-    Type: String
-    Default: 10.0.0.0/24
+    PublicSubnet1CIDR:
+      Description: Please enter the IP range (CIDR notation) for the Public Subnet 1
+      Type: String
+      Default: 10.0.0.0/24
 
-  PublicSubnet2CIDR:
-    Description: Please enter the IP range (CIDR notation) for the Public Subnet 2
-    Type: String
-    Default: 10.0.1.0/24
+    PublicSubnet2CIDR:
+      Description: Please enter the IP range (CIDR notation) for the Public Subnet 2
+      Type: String
+      Default: 10.0.1.0/24
 
-  PrivateSubnet1CIDR:
-    Description: Please enter the IP range (CIDR notation) for the Private Subnet 1
-    Type: String
-    Default: 10.0.2.0/24
+    PrivateSubnet1CIDR:
+      Description: Please enter the IP range (CIDR notation) for the Private Subnet 1
+      Type: String
+      Default: 10.0.2.0/24
 
-  PrivateSubnet2CIDR:
-    Description: Please enter the IP range (CIDR notation) for the Private Subnet 2
-    Type: String
-    Default: 10.0.3.0/24
+      PrivateSubnet2CIDR:
+        Description: Please enter the IP range (CIDR notation) for the Private Subnet 2
+        Type: String
+        Default: 10.0.3.0/24
 Resources:
   VPC:
     Type: AWS::EC2::VPC
@@ -101,10 +101,10 @@ Resources:
           Value: !Sub ${"${EnvironmentName}"} Private Subnet (AZ2)
 
   NatGateway1EIP:
-   Type: AWS::EC2::EIP
-   DependsOn: InternetGatewayAttachment
-   Properties:
-     Domain: vpc
+    Type: AWS::EC2::EIP
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      Domain: vpc
 
   NatGateway2EIP:
     Type: AWS::EC2::EIP
@@ -250,13 +250,13 @@ Outputs:
       Name: !Sub ${EnvironmentName}-PUB2-SN
 
   PrivateSubnet1:
-      Description: A reference to the private subnet in the 1st Availability Zone
-      Value: !Ref PrivateSubnet1
-      Export:
-        Name: !Sub ${EnvironmentName}-PRIV1-SN
+    Description: A reference to the private subnet in the 1st Availability Zone
+    Value: !Ref PrivateSubnet1
+    Export:
+      Name: !Sub ${EnvironmentName}-PRIV1-SN
 
   PrivateSubnet2:
-      Description: A reference to the private subnet in the 2nd Availability Zone
-      Value: !Ref PrivateSubnet2
-      Export:
-        Name: !Sub ${EnvironmentName}-PRIV2-SN
+    Description: A reference to the private subnet in the 2nd Availability Zone
+    Value: !Ref PrivateSubnet2
+    Export:
+      Name: !Sub ${EnvironmentName}-PRIV2-SN
