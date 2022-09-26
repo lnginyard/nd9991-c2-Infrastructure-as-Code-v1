@@ -1,19 +1,9 @@
-   
-Description: >
-  Lorenzo Ginyard / Deploying a high availability web app - 
-  This template deploys a VPC, witha pair of private and public subnets across two Availability Zones.
-  It deploys an Internet gateway with route on the public subnets. It deploys a pair of NAT gateways, 
-  with default routes for them in the private subnets.
+
 Parameters:
   EnvironmentName:
     Description: An Environment name that will be prefixed to resources
     Type: String
 
-  VpcCIDR:
-    Description: Please enter the IP range (CIDR notation) for this
-    Type: String
-    Default: 10.0.0.0/16
-  
   PublicSubnet1CIDR:
     Description: Please enter the IP range (CIDR notation) for the Public Subnet 1
     Type: String
@@ -28,11 +18,6 @@ Parameters:
     Description: Please enter the IP range (CIDR notation) for the Private Subnet 1
     Type: String
     Default: 10.0.2.0/24
-    
-  PrivateSubnet2CIDR:
-    Description: Please enter the IP range (CIDR notation) for the Private Subnet 2
-    Type: String
-    Default: 10.0.3.0/24
 
 Resources:
   VPC:
@@ -61,7 +46,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [0, !GetAZs '']
+
       CidrBlock: !Ref PublicSubnet1CIDR
       MapPublicIpOnLaunch: true
       Tags:
@@ -72,7 +57,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [1, !GetAZs '']
+
       CidrBlock: !Ref PublicSubnet2CIDR
       MapPublicIpOnLaunch: true
       Tags:
@@ -83,30 +68,23 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [0, !GetAZs '']
-      CidrBlock: !Ref PrivateSubnet1CIDR
+
+CidrBlock: !Ref PrivateSubnet1CIDR
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${EnvironmentName} Private Subnet (AZ1)
+
 
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      AvailabilityZone: !Select [1, !GetAZs '']
+
       CidrBlock: !Ref PrivateSubnet2CIDR
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
-          Value: !Sub ${EnvironmentName} Private Subnet (AZ2)
 
-  NatGateway1EIP:
-    Type: AWS::EC2::EIP
-    DependsOn: InternetGatewayAttachment
-    Properties:
-      Domain: vpc
-      
   NatGateway2EIP:
     Type: AWS::EC2::EIP
     DependsOn: InternetGatewayAttachment
@@ -120,7 +98,7 @@ Resources:
       SubnetId: !Ref PublicSubnet1
       Tags:
         - Key: Name
-          Value: !Sub ${EnvironmentName} NAT 1
+
 
   NatGateway2:
     Type: AWS::EC2::NatGateway
@@ -129,16 +107,14 @@ Resources:
       SubnetId: !Ref PublicSubnet2
       Tags:
         - Key: Name
-          Value: !Sub ${EnvironmentName} NAT 2
-      
+
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub ${EnvironmentName} Public Routes
-          
+
   DefaultPublicRoute:
     Type: AWS::EC2::Route
     DependsOn: InternetGatewayAttachment
@@ -165,7 +141,6 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub ${EnvironmentName} Private Routes (AZ1)
 
   DefaultPrivateRoute1:
     Type: AWS::EC2::Route
@@ -228,13 +203,13 @@ Outputs:
 
   PublicSubnets:
     Description: A list of public subnets
-    Value: !Join [",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
+
     Export:
       Name: !Sub ${EnvironmentName}-PUB-NETS
 
   PrivateSubnets:
     Description: A list of private subnets
-    Value: !Join [",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
+
     Export:
       Name: !Sub ${EnvironmentName}-PRIV-NETS
 
@@ -251,13 +226,4 @@ Outputs:
       Name: !Sub ${EnvironmentName}-PUB2-SN
 
   PrivateSubnet1:
-    Description: A reference to the private subnet in the 1st Availability Zone
-    Value: !Ref PrivateSubnet1
-    Export:
-      Name: !Sub ${EnvironmentName}-PRIV1-SN
 
-  PrivateSubnet2:
-    Description: A reference to the private subnet in the 2nd Availability Zone
-    Value: !Ref PrivateSubnet2
-    Export:
-      Name: !Sub ${EnvironmentName}-PRIV2-SN
