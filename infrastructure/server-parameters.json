@@ -1,6 +1,18 @@
 [
   {
     "ParameterKey": "EnvironmentName",
-    "ParameterValue": "UdacityProject"
+    "ParameterValue": "UdacityProjectLGinyard"
+  },
+  {
+    "ParameterKey": "S3CodeBucketName",
+    "ParameterValue": "udacity-demo-1"
+  },
+  {
+    "ParameterKey": "S3CodeArchive",
+    "ParameterValue": "udacity.zip"
+  },
+  {
+    "ParameterKey": "DistributionId",
+    "ParameterValue": "E1Z4TEZ695DR6O"
   }
 ]
