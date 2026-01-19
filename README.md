@@ -1,6 +1,12 @@
 # nd9991-c2-Infrastructure-as-Code-v1
 Deploy a high-availability web-app using AWS CloudFormation.
 
+## Architecture
+Describe network, servers, and security layers
+
+## Security
+IAM roles, access controls, encryption
+
 As your final project, you'll be faced with a real scenario.
 
 Creating this project will give me the hands-on experience I'll need to confidently talk about infrastructure as code. So, for that reason, Udacity has chosen a realistic scenario where I'll deploy an application (Apache Web Server) and I'll also pick up code (JavaScript and HTML) from S3 Storage and deploy it in the appropriate folder on the web server.
