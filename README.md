@@ -1,71 +1,63 @@
-# nd9991-c2-Infrastructure-as-Code-v1
-Deploy a high-availability web-app using AWS CloudFormation.
+# AWS Infrastructure as Code — High-Availability Web Application
 
-## Architecture
-Describe network, servers, and security layers
+A CloudFormation project based on a Udacity Cloud DevOps Engineer course scenario. The goal is to describe and provision the AWS network and compute resources needed to host a web application with a public load balancer and application servers in private subnets.
+
+## What this project is intended to demonstrate
+
+- Infrastructure described as code using AWS CloudFormation
+- VPC and subnet design
+- Public load balancer with application servers in private subnets
+- Security groups and IAM role-based access to S3
+- Auto Scaling and health checks
+- Parameterized templates and stack outputs
+- Repeatable infrastructure creation and teardown
+
+**Portfolio honesty note:** this repository contains course/starter material and its README previously included architecture placeholders. Before describing it as a completed deployment, verify the current template, parameter files, and deployment outputs, then replace this note with the exact resources and tests you personally completed.
+
+## Architecture target
+
+```text
+Internet
+   |
+Public Load Balancer
+   |
+Private Subnets
+   |-- Application Server / Auto Scaling
+   |-- Application Server / Auto Scaling
+   |
+S3 application artifact
+```
+
+This is the target scenario described in the project instructions, not a claim that the stack is currently deployed.
+
+## Review checklist
+
+Before using this repository in an application, confirm that the template includes and correctly configures:
+
+- VPC, public/private subnets, route tables, and NAT/egress path as required
+- Load balancer listeners and health checks
+- Launch configuration/template and Auto Scaling group
+- Least-privilege IAM role for application artifact access
+- Security group rules that expose only required ports
+- Parameters and outputs, including the load balancer endpoint
+- Valid CloudFormation syntax and successful stack creation
+- A clean teardown path and no leftover billable resources
+
+## How to validate
+
+Use an AWS account/profile you control and understand that deployment can incur charges. Review the template before running any command.
+
+```bash
+aws sts get-caller-identity
+aws cloudformation validate-template --template-body file://<template-file>.yaml
+```
+
+Replace `<template-file>.yaml` with the actual template path in this repository. A successful template validation is not the same as a successful deployment or a security review.
+
+## Learning context
+
+This project is part of a cloud infrastructure learning path. For a recruiter-facing portfolio, pair it with a diagram, concise implementation notes, screenshots or sanitized deployment output, and a list of issues you found and resolved.
 
 ## Security
-IAM roles, access controls, encryption
 
-As your final project, you'll be faced with a real scenario.
-
-Creating this project will give me the hands-on experience I'll need to confidently talk about infrastructure as code. So, for that reason, Udacity has chosen a realistic scenario where I'll deploy an application (Apache Web Server) and I'll also pick up code (JavaScript and HTML) from S3 Storage and deploy it in the appropriate folder on the web server.
-
-###There will be two parts to this project:
-
-##Diagram: You'll first develop a diagram that you can present as part of your portfolio and as a visual aid to understand the CloudFormation script.
-
-##Script (Template and Parameters): The second part is to interpret the instructions and create a matching CloudFormation script.
-Starter Code
-
-You will find starter code for the project in this Github repository. The same repo has the resources used in the lesson demos/exercises for a quick reference.
-
-As my final project, I'll be faced with a real scenario.
-
-Creating this project will give me the hands-on experience you need to confidently talk about infrastructure as code. So, for that reason, we have chosen a realistic scenario where you deploy an application (Apache Web Server) and you also pick up code (JavaScript and HTML) from S3 Storage and deploy it in the appropriate folder on the web server.
-
-
-##1.) 
-
-Diagram: You'll first develop a diagram that you can present as part of your portfolio and as a visual aid to understand the CloudFormation script.
-
-##2.)
-
-Script (Template and Parameters): The second part is to interpret the instructions and create a matching CloudFormation script.
-
-##Starter Code
-
-You will find starter code for the project in this Github repository. The same repo has the resources used in the lesson demos/exercises for a quick reference.
-
-           ##Server specs
-
-You'll need to create a Launch Configuration for your application servers in order to deploy four servers, two located in each of your private subnets. The launch configuration will be used by an auto-scaling group.
-You'll need two vCPUs and at least 4GB of RAM. The Operating System to be used is Ubuntu 18. So, choose an Instance size and Machine Image (AMI) that best fits this spec.
-Be sure to allocate at least 10GB of disk space so that you don't run into issues. 
-
-    ##Security Groups and Roles
-
-Since I will be downloading the application archive from an S3 Bucket, I'll need to create an IAM Role that allows my instances to use the S3 Service.
-Udagram communicates on the default HTTP Port: 80, so my servers will need this inbound port open since I will use it with the Load Balancer and the Load Balancer Health Check. As for outbound, the servers will need unrestricted internet access to be able to download and update their software.
-The load balancer should allow all public traffic (0.0.0.0/0) on port 80 inbound, which is the default HTTP port. Outbound, it will only be using port 80 to reach the internal servers.
-The application needs to be deployed into private subnets with a Load Balancer located in a public subnet.
-One of the output exports of the CloudFormation script should be the public URL of the LoadBalancer. Bonus points if you add http:// in front of the load balancer DNS Name in the output, for convenience.
-
-
-
-         ##Other Considerations
-
-
-You can deploy your servers with an SSH Key into Public subnets while you are creating the script. This helps with troubleshooting. Once done, move them to your private subnets and remove the SSH Key from your Launch Configuration.
-It also helps to test directly, without the load balancer. Once you are confident that your server is behaving correctly, increase the instance count and add the load balancer to your script.
-While your instances are in public subnets, you'll also need the SSH port open (port 22) for your access, in case you need to troubleshoot your instances.
-Log information for UserData scripts is located in this file: cloud-init-output.log under the folder: /var/log.
-You should be able to destroy the entire infrastructure and build it back up without any manual steps required, other than running the CloudFormation script.
-The provided UserData script should help you install all the required dependencies. Bear in mind that this process takes several minutes to complete. Also, the application takes a few seconds to load. This information is crucial for the settings of your load balancer health check.
-It's up to you to decide which values should be parameters and which you will hard-code in your script.
-See the provided supporting code for help and more clues.
-If you want to go the extra mile, set up a bastion host (jump box) to allow you to SSH into your private subnet servers. This bastion host would be on a Public Subnet with port 22 open only to your home IP address, and it would need to have the private key that you use to access the other servers.
-
-
-##Last thing: Remember to delete your CloudFormation stack when you're done to avoid recurring charges!
-
+Never commit access keys, passwords, private keys, or account-specific configuration. Prefer named AWS profiles and least-privilege IAM permissions. Remove test infrastructure after validating it.
